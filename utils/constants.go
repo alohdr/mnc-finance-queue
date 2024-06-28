@@ -1,9 +1,9 @@
 package utils
 
 const (
-	EventMncTransfer = "events.mnc.transfer"
-)
+	StatusSuccess = "SUCCESS"
 
-const (
+	EventMncTransfer = "events.mnc.transfer"
+
 	RouteMncTransfer = "*.mnc.transfer.*"
 )

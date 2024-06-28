@@ -18,5 +18,5 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 }
 
 func (r *userRepository) Update(tx *gorm.DB, user *entity.User) error {
-	return tx.Save(user).Error
+	return tx.Save(&user).Error
 }

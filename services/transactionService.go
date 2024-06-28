@@ -6,6 +6,7 @@ import (
 	"log"
 	"mnc-finance-queue/entity"
 	"mnc-finance-queue/repositories"
+	"mnc-finance-queue/utils"
 	"mnc-finance-queue/utils/errorMessage"
 )
 
@@ -37,20 +38,25 @@ func (s *transactionService) Transfer(obj []byte) error {
 
 	model.RecipientObj.Balance += model.TransactionObj.Amount
 	if err := s.userRepository.Update(tx, &model.RecipientObj); err != nil {
+		tx.Rollback()
 		log.Println(err)
 		return errorMessage.ErrInternalServerError
 	}
 
 	model.UserObj.Balance -= model.TransactionObj.Amount
 	if err := s.userRepository.Update(tx, &model.UserObj); err != nil {
+		tx.Rollback()
 		log.Println(err)
 		return errorMessage.ErrInternalServerError
 	}
+
+	model.TransactionObj.Status = utils.StatusSuccess
 
 	if err := s.transactionRepository.Create(tx, &model.TransactionObj); err != nil {
+		tx.Rollback()
 		log.Println(err)
 		return errorMessage.ErrInternalServerError
 	}
 
-	return nil
+	return tx.Commit().Error
 }
