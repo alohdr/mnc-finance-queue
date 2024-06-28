@@ -9,7 +9,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
-	"mnc-finance-queue/entity"
 	"os"
 	"time"
 )
@@ -60,10 +59,6 @@ func SetupDatabase() *gorm.DB {
 		log.Println("Error connecting to database : error=", err)
 		return nil
 	}
-
-	db.Exec(`SET timezone TO '+07';`)
-	db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
-	db.AutoMigrate(&entity.User{}, &entity.Transaction{})
 
 	return db
 }
